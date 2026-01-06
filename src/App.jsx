@@ -6,22 +6,26 @@ import './App.css'
 function App() {
     const [screen, setScreen] = useState('')
 
+    //Timer
     const [seconds, setSeconds] = useState(30 * 60) // 1800 seconds = 30 minutes
     const intervalRef = useRef(null)
 
     const startTimer = () => {
-        if (intervalRef.current) return // prevent double intervals
+        if (intervalRef.current) return // Prevents starting another timer
 
         intervalRef.current = setInterval(() => {
+            // Creates the interval
             setSeconds((prev) => {
+                // Updates state of seconds safely
                 if (prev <= 1) {
-                    clearInterval(intervalRef.current)
-                    intervalRef.current = null
-                    return 0
+                    // Guarantees working with latest value and also prevents going past 0 seconds
+                    clearInterval(intervalRef.current) // Clears interval and stops ticking
+                    intervalRef.current = null // Allows resetting of timer
+                    return 0 // Returns state to 0
                 }
-                return prev - 1
+                return prev - 1 // if above 1 second subtract 1, re-render, wait for next tick
             })
-        }, 1000)
+        }, 1000) // Ticks every 1 sec (1000ms)
     }
 
     const stopTimer = () => {
@@ -66,14 +70,14 @@ function App() {
                 </button>
             </div>
             {/* Timer */}
-            <div className="timer-card flex  justify-between items-center rounded-[20px] bg-purple-100 p-6">
+            <div className="timer-card grid grid-cols-2 grid-rows-2 items-center rounded-[20px] bg-purple-100 p-6">
                 <div className="timer-countdown flex flex-col">
                     <span className="font-bold text-[40px]">
                         {formatTime(seconds)}
                     </span>
                     <span className="text-xs">30 Minute Timer Set</span>
                 </div>
-                <div className="flex gap-1">
+                <div className="flex justify-end gap-1">
                     {/* play button */}
                     <button
                         onClick={startTimer}
@@ -89,11 +93,22 @@ function App() {
                         ✖
                     </button>
                 </div>
+                <div className="col-span-2 grid gap-2 grid-cols-3 grid-rows-1">
+                    <button className="text-sm bg-white rounded-4xl p-1 cursor-pointer">
+                        +1 Min
+                    </button>
+                    <button className="text-sm bg-white rounded-4xl p-1 cursor-pointer">
+                        +5 Min
+                    </button>
+                    <button className="text-sm bg-white rounded-4xl p-1 cursor-pointer">
+                        +10 Min
+                    </button>
+                </div>
             </div>
             {/* Type section */}
             <div className="type-section">
                 <h2 className="font-bold my-2">Type</h2>
-                <div className="type-card flex flex-col rounded-[20px] bg-gray-200 p-6 gap-2  ">
+                <div className="type-card grid grid-cols-2 grid-rows-2 rounded-[20px] bg-gray-200 p-6 gap-2  ">
                     <button className="py-3 text-white bg-pottypalcherry-400 rounded-2xl">
                         Pee
                     </button>
