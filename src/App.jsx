@@ -3,8 +3,11 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
+import SuccessCard from './components/SuccessCard'
+
 function App() {
     const [screen, setScreen] = useState('')
+    const [success, setSuccess] = useState('')
 
     //Timer
     const [seconds, setSeconds] = useState(30 * 60) // 1800 seconds = 30 minutes
@@ -123,9 +126,10 @@ function App() {
                     </button>
                 </div>
             </div>
+            {/* Location section */}
             <div className="location-section">
                 <h2 className="font-bold my-2">Location</h2>
-                <div className="type-card grid grid-cols-2 grid-rows-3 rounded-[20px] bg-gray-200 p-6 gap-2">
+                <div className="location-card grid grid-cols-2 grid-rows-3 rounded-[20px] bg-gray-200 p-6 gap-2">
                     <button className="py-3 text-white bg-pottypalcherry-400 rounded-2xl">
                         Potty
                     </button>
@@ -143,6 +147,8 @@ function App() {
                     </button>
                 </div>
             </div>
+            {/* Success section */}
+            <SuccessCard />
         </div>
     )
 }
