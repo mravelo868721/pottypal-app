@@ -6,11 +6,40 @@ import './App.css'
 function App() {
     const [screen, setScreen] = useState('')
 
-    const [seconds, setSeconds] = useState(30 * 60)
+    const [seconds, setSeconds] = useState(30 * 60) // 1800 seconds = 30 minutes
     const intervalRef = useRef(null)
 
     const startTimer = () => {
         if (intervalRef.current) return // prevent double intervals
+
+        intervalRef.current = setInterval(() => {
+            setSeconds((prev) => {
+                if (prev <= 1) {
+                    clearInterval(intervalRef.current)
+                    intervalRef.current = null
+                    return 0
+                }
+                return prev - 1
+            })
+        }, 1000)
+    }
+
+    const stopTimer = () => {
+        clearInterval(intervalRef.current)
+        intervalRef.current = null
+        setSeconds(30 * 60)
+    }
+
+    // Clean up when the component unmounts. Prevents memory leaks if screens change
+    useEffect(() => {
+        return () => clearInterval(intervalRef.current)
+    }, [])
+
+    //Turn seconds into MM:SS
+    const formatTime = (totalSeconds) => {
+        const minutes = Math.floor(totalSeconds / 60)
+        const secs = totalSeconds % 60
+        return `${minutes}:${secs.toString().padStart(2, '0')}`
     }
 
     return (
@@ -39,16 +68,24 @@ function App() {
             {/* Timer */}
             <div className="timer-card flex  justify-between items-center rounded-[20px] bg-purple-100 p-6">
                 <div className="timer-countdown flex flex-col">
-                    <span className="font-bold text-[40px]">29:43</span>
+                    <span className="font-bold text-[40px]">
+                        {formatTime(seconds)}
+                    </span>
                     <span className="text-xs">30 Minute Timer Set</span>
                 </div>
                 <div className="flex gap-1">
                     {/* play button */}
-                    <button className="flex justify-center items-center w-12 h-12 rounded-[9999px] text-white bg-purple-500">
+                    <button
+                        onClick={startTimer}
+                        className="flex justify-center items-center w-12 h-12 rounded-[9999px] text-white bg-purple-500 cursor-pointer"
+                    >
                         ▶︎
                     </button>
                     {/* close button */}
-                    <button className="flex justify-center items-center w-12 h-12 rounded-[9999px] text-white bg-purple-300">
+                    <button
+                        onClick={stopTimer}
+                        className="flex justify-center items-center w-12 h-12 rounded-[9999px] text-white bg-purple-300 cursor-pointer"
+                    >
                         ✖
                     </button>
                 </div>
