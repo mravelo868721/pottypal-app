@@ -7,7 +7,7 @@ import SuccessCard from './components/SuccessCard'
 
 function App() {
     const [screen, setScreen] = useState('')
-    const [success, setSuccess] = useState('')
+    const [success, setSuccess] = useState(null)
 
     //Timer
     const [seconds, setSeconds] = useState(30 * 60) // 1800 seconds = 30 minutes
@@ -148,7 +148,7 @@ function App() {
                 </div>
             </div>
             {/* Success section */}
-            <SuccessCard />
+            <SuccessCard successStatus={success} onChange={setSuccess} />
         </div>
     )
 }
