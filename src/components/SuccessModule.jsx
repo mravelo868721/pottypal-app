@@ -1,9 +1,4 @@
-import { useState } from 'react'
-
-export default function SuccessModule() {
-    // States
-    const [success, setSuccess] = useState(null) // true | false
-
+export default function SuccessModule({ value, onChange }) {
     // Buttons
     const baseBtn =
         'py-3 rounded-2xl cursor-pointer transition-all duration-100'
@@ -21,8 +16,8 @@ export default function SuccessModule() {
                 {options.map((option) => (
                     <button
                         key={option}
-                        className={`${baseBtn} ${success === option ? activeBtn : inactiveBtn}`}
-                        onClick={() => setSuccess(option)}
+                        className={`${baseBtn} ${value === option ? activeBtn : inactiveBtn}`}
+                        onClick={() => onChange(option)}
                     >
                         {option}
                     </button>

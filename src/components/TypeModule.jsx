@@ -1,8 +1,4 @@
-import { useState } from 'react'
-
-export default function TypeModule() {
-    const [type, setType] = useState(null) // Pee | Poop | Accident | Try
-
+export default function TypeModule({ value, onChange }) {
     // Buttons
     const baseBtn =
         'py-3 rounded-2xl cursor-pointer transition-all duration-100'
@@ -20,8 +16,8 @@ export default function TypeModule() {
                 {options.map((option) => (
                     <button
                         key={option}
-                        className={`${baseBtn} ${type === option ? activeBtn : inactiveBtn}`}
-                        onClick={() => setType(option)}
+                        className={`${baseBtn} ${value === option ? activeBtn : inactiveBtn}`}
+                        onClick={() => onChange(option)}
                     >
                         {option}
                     </button>

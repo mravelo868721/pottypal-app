@@ -1,20 +1,30 @@
 import { useState } from 'react'
-
 import './App.css'
-
 import logo from './assets/potty-pal-logo.svg'
 
 import TimerModule from './components/TimerModule'
 import TypeModule from './components/TypeModule'
-import LocationCard from './components/LocationModule'
-import SuccessModule from './components/SuccessModule'
 import LocationModule from './components/LocationModule'
+import SuccessModule from './components/SuccessModule'
 
 function App() {
     const [screen, setScreen] = useState('')
-    const [success, setSuccess] = useState(null)
+    const [type, setType] = useState(null) // Pee | Poop | Accident | Try
+    const [location, setLocation] = useState(null) // Potty | Toilet | Diaper | Underwear | *Other
+    const [success, setSuccess] = useState(null) // Yes | No
 
     // Need to log values: type, location, success, time of day
+    const handleLog = () => {
+        const entry = {
+            type,
+            location,
+            success,
+            timestamp: new Date().toISOString(),
+        }
+        console.log('LOG ENTRY', entry)
+    }
+    // Check all entries are filled
+    const canLog = type && location && success
 
     return (
         <div className="flex flex-col p-4 mx-auto mt-4 max-w-99 bg-white rounded-[20px]">
@@ -37,18 +47,22 @@ function App() {
                     Insights
                 </button>
             </div>
-            {/* Timer */}
             <TimerModule />
-
-            {/* Type section */}
-            <TypeModule />
-            {/* Location section */}
-            <LocationModule />
-            {/* Success section */}
-            <SuccessModule />
-            <button className="font-bold text-white bg-purple-900 mt-4 py-6 rounded-2xl cursor-pointer transition-all duration-100">
+            <TypeModule value={type} onChange={setType} />
+            <LocationModule value={location} onChange={setLocation} />
+            <SuccessModule value={success} onChange={setSuccess} />
+            <button
+                className={`font-bold text-white mt-4 py-6 rounded-2xl cursor-pointer transition-all duration-100 ${canLog ? 'bg-purple-900 cursor-pointer' : 'bg-gray-300 cursor-not-allowed opacity-60'}`}
+                onClick={handleLog}
+                disabled={!canLog}
+            >
                 Log New Potty Event
             </button>
+            {!canLog && (
+                <p className="text-xs text-center mt-2">
+                    Please select type, location, and success to log an event.
+                </p>
+            )}
         </div>
     )
 }

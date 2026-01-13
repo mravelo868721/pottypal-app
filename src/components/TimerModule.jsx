@@ -18,13 +18,15 @@ export default function TimerModule({
         audio.play().catch(() => {}) // ignore autoplay block errors
     }
 
-    // A function that takes a parameter
+    // Converts minutes into total seconds i.e. 30 minutes = 1800 seconds
     const addMinutes = (minutes) => {
         if (intervalRef.current) return // Prevents changes while running
         setSeconds((prev) => prev + minutes * 60)
     }
 
-    const [seconds, setSeconds] = useState(initialSeconds) // 1800 seconds = 30 minutes
+    const [seconds, setSeconds] = useState(initialSeconds)
+    const [startSeconds, setStartSeconds] = useState(null)
+    const [isRunning, setIsRunning] = useState(false)
 
     // Clean up when the component unmounts. Prevents memory leaks if screens change
     useEffect(() => {
@@ -37,12 +39,16 @@ export default function TimerModule({
     // Start Timer
     const startTimer = () => {
         if (intervalRef.current || seconds <= 0) return
+        setStartSeconds(seconds)
+        setIsRunning(true)
         intervalRef.current = setInterval(() => {
             setSeconds((prev) => {
                 const next = prev - 1
                 if (next <= 0) {
                     clearInterval(intervalRef.current)
                     intervalRef.current = null
+                    setIsRunning(false)
+                    setStartSeconds(null)
                     playAlarm()
                     onFinish?.()
                     return 0
@@ -58,6 +64,8 @@ export default function TimerModule({
         clearInterval(intervalRef.current)
         intervalRef.current = null
         setSeconds(initialSeconds)
+        setIsRunning(false)
+        setStartSeconds(null)
         onReset?.()
     }
 
@@ -66,6 +74,8 @@ export default function TimerModule({
         const secs = totalSeconds % 60
         return `${minutes}:${secs.toString().padStart(2, '0')}`
     }
+
+    const formatMinutes = (totalSeconds) => Math.round(totalSeconds / 60)
 
     const primeAlarm = () =>
         alarmRef.current?.play().then(() => alarmRef.current?.pause())
@@ -76,7 +86,12 @@ export default function TimerModule({
                 <span className="font-bold text-[40px]">
                     {formatTime(seconds)}
                 </span>
-                <span className="text-xs">X Minute Timer Set</span>
+                {/* Should only appear when Play button is pressed */}
+                {isRunning && startSeconds !== null ? (
+                    <span className="text-xs">
+                        {formatMinutes(startSeconds)} Minute Timer Set
+                    </span>
+                ) : null}
             </div>
             <div className="flex justify-end gap-1">
                 {/* play button */}

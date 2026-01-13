@@ -1,9 +1,4 @@
-import { useState } from 'react'
-
-export default function LocationModule() {
-    //States
-    const [location, setLocation] = useState(null) // Potty | Toilet | Diaper | Underwear | *Other
-
+export default function LocationModule({ value, onChange }) {
     // Buttons
     const baseBtn =
         'py-3 rounded-2xl cursor-pointer transition-all duration-100'
@@ -21,8 +16,8 @@ export default function LocationModule() {
                 {options.map((option) => (
                     <button
                         key={option}
-                        className={`${baseBtn} ${location === option ? activeBtn : inactiveBtn}`}
-                        onClick={() => setLocation(option)}
+                        className={`${baseBtn} ${value === option ? activeBtn : inactiveBtn}`}
+                        onClick={() => onChange(option)}
                     >
                         {option}
                     </button>
